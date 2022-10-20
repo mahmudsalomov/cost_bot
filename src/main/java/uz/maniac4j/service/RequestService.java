@@ -21,6 +21,13 @@ public class RequestService {
         this.telegramUserRepository = telegramUserRepository;
     }
 
+    public void reset(TelegramUser user){
+        List<Request> all = requestRepository.findAllByUserAndSentFalseOrderByCreatedAtDesc(user);
+        for (Request request : all) {
+            request.setSent(true);
+            requestRepository.save(request);
+        }
+    }
     public Request save(TelegramUser user){
         List<Request> all = requestRepository.findAllByUserAndSentFalseOrderByCreatedAtDesc(user);
 
@@ -55,6 +62,12 @@ public class RequestService {
         else {
             return null;
         }
+    }
+
+    public Request confirm(TelegramUser user){
+        Request last = getLast(user);
+        last.setSent(true);
+        return requestRepository.save(last);
     }
 
 //    public Request addItem(TelegramUser user, Request request){

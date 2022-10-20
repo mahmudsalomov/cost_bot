@@ -2,6 +2,7 @@ package uz.maniac4j.bot.handler;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import uz.maniac4j.component.MessageTemplate;
 import uz.maniac4j.model.*;
@@ -42,18 +43,18 @@ public class RequestHandler implements Handler{
 
         if (strings.length>=2){
             try {
-                Integer.parseInt(strings[1]);
+                Integer.parseInt(strings[1].replace(" ",""));
             }catch (Exception e){
                 return Collections.singletonList(messageTemplate.addItem(user,"Mahsulotlar sonini to'g'ri kiriting!\n"+user.getSection().getRu() + " ga maxsulotni quyidagicha yuboring:\n name:amount:note"));
             }
             Item item = Item.builder()
                     .section(user.getSection())
                     .name(strings[0])
-                    .amount(Integer.parseInt(strings[1]))
+                    .amount(Integer.parseInt(strings[1].replace(" ","")))
                     .description(strings.length == 3 ? strings[2] : "")
                     .build();
             item = itemService.add(user, item);
-            return Collections.singletonList(messageTemplate.sectionSelect(user));
+            return Collections.singletonList(messageTemplate.sectionSelect(user,false));
         }
 
         return null;
@@ -70,6 +71,34 @@ public class RequestHandler implements Handler{
             user.setState(State.SECOND);
             user=telegramUserRepository.save(user);
             return Collections.singletonList(messageTemplate.addItem(user));
+        }
+
+        if (text.equals(Translations.SEND_REQUEST.name())){
+            return Collections.singletonList(messageTemplate.confirmRequestMessage(user));
+        }
+
+        if (text.startsWith(Translations.DELETE_ITEM.name())) {
+            String[] strings = text.split(":");
+            itemService.delete(user, Long.valueOf(strings[1]));
+
+
+
+            return Collections.singletonList(messageTemplate.editReplyMarkup(user,messageTemplate.sectionSelect(user),callback.getMessage().getMessageId()));
+//            return Collections.singletonList(messageTemplate.sectionSelect(user));
+        }
+
+
+        if (text.equals(Translations.BACK_SECTION.name())) return Collections.singletonList(messageTemplate.sectionSelect(user,false));
+        if (text.equals(Translations.DRAFT_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user,false));
+        if (text.equals(Translations.CANCEL_REQUEST.name())||text.equals(Translations.BACK.name())) return Collections.singletonList(messageTemplate.mainMenu(user));
+
+        if (text.equals(Translations.CONFIRM_REQUEST.name())) {
+            Request confirm = requestService.confirm(user);
+            List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
+            list.add(messageTemplate.confirm(user));
+            list.add(messageTemplate.mainMenu(user));
+
+            return list;
         }
 
 
@@ -89,6 +118,22 @@ public class RequestHandler implements Handler{
             result.add(section.name());
         }
         result.add(Translations.SEND_REQUEST.name());
+        result.add(Translations.BACK.name());
+        result.add(Translations.BACK_SECTION.name());
+        result.add(Translations.CONFIRM_REQUEST.name());
+        result.add(Translations.CANCEL_REQUEST.name());
+        result.add(Translations.DRAFT_REQUEST.name());
+
+
+        Request last = requestService.getLast(user);
+        if (last!=null){
+            List<Item> items = itemService.allByRequest(last);
+            for (Item item : items) {
+                result.add(Translations.DELETE_ITEM.name()+":"+item.getId());
+            }
+        }
+
+
         return result;
     }
 
