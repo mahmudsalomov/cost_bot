@@ -2,6 +2,7 @@ package uz.maniac4j.bot.handler;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import uz.maniac4j.component.MessageTemplate;
 import uz.maniac4j.model.State;
@@ -36,7 +37,10 @@ public class StartHandler implements Handler{
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, CallbackQuery callback) throws IOException {
         String text=callback.getData();
         System.out.println("START HANDLER");
-        if (text.equals(Translations.ADD_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user,true));
+        SendMessage sendMessage = messageTemplate.sectionSelect(user, true);
+
+//        if (text.equals(Translations.ADD_REQUEST.name())) return messageTemplate.editTextAndReplyMarkup(user,callback.getMessage().getMessageId(),sendMessage.getText(),messageTemplate.sectionSelect(user));
+        if (text.equals(Translations.ADD_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user, true));
         return null;
     }
 

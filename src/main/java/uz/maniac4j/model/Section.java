@@ -4,12 +4,16 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum Section {
-    FIRST("birinchi"),
-    SECOND("ikkinchi"),
-    THIRD("uchinchi"),
-    FOURTH("to'rtinchi"),
-    FIFTH("beshinchi"),
-    SIXTH("oltinchi");
+    FIRST("Тех отдел"),
+    SECOND("Распил"),
+    THIRD("Столярка"),
+    FOURTH("Малярка"),
+    FIFTH("Контр.сборка"),
+    SIXTH("Монтаж"),
+    SEVENTH("Роверный"),
+    EIGHTH("Каменный"),
+    NINTH("Бухгалтерия"),
+    TENTH("Хоз.двор");
 
 
 

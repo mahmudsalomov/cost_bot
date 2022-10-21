@@ -76,8 +76,12 @@ public class UpdateReceiver {
 
 
                 final Long chatId = message.getFrom().getId();
-                final TelegramUser user = telegramUserRepository.findById(chatId)
+                TelegramUser user = telegramUserRepository.findById(chatId)
                         .orElseGet(() -> telegramUserRepository.save(new TelegramUser(update.getMessage().getFrom())));
+                if (message.getText().equals("/start")||message.getText().equals("/restart")){
+                    user.setState(State.FIRST);
+                    user=telegramUserRepository.save(user);
+                }
                 if (isMessageWithText(update)) {
 
 
@@ -86,7 +90,8 @@ public class UpdateReceiver {
                     System.out.println(handlers);
                     System.out.println(handlers.size());
                     handlers.forEach(System.out::println);
-                    handlers.forEach(h-> System.out.println(h.operatedCallBackQuery(user)));
+                    TelegramUser finalUser = user;
+                    handlers.forEach(h-> System.out.println(h.operatedCallBackQuery(finalUser)));
 
 
                     Optional<TelegramUser> byId = telegramUserRepository.findById(user.getId());

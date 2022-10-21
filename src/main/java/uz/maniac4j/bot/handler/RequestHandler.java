@@ -45,7 +45,7 @@ public class RequestHandler implements Handler{
             try {
                 Integer.parseInt(strings[1].replace(" ",""));
             }catch (Exception e){
-                return Collections.singletonList(messageTemplate.addItem(user,"Mahsulotlar sonini to'g'ri kiriting!\n"+user.getSection().getRu() + " ga maxsulotni quyidagicha yuboring:\n name:amount:note"));
+                return Collections.singletonList(messageTemplate.addItem(user,"Введите количество товаров правильно!\n"+user.getSection().getRu() + Translations.TXT_PRODUCT.getRu()));
             }
             Item item = Item.builder()
                     .section(user.getSection())
@@ -90,7 +90,11 @@ public class RequestHandler implements Handler{
 
         if (text.equals(Translations.BACK_SECTION.name())) return Collections.singletonList(messageTemplate.sectionSelect(user,false));
         if (text.equals(Translations.DRAFT_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user,false));
-        if (text.equals(Translations.CANCEL_REQUEST.name())||text.equals(Translations.BACK.name())) return Collections.singletonList(messageTemplate.mainMenu(user));
+
+        if (text.equals(Translations.CANCEL_REQUEST.name())||text.equals(Translations.BACK.name())) {
+            return Collections.singletonList(messageTemplate.mainMenu(user));
+//            return messageTemplate.mainMenuEdit(user,callback.getMessage().getMessageId());
+        }
 
         if (text.equals(Translations.CONFIRM_REQUEST.name())) {
             Request confirm = requestService.confirm(user);

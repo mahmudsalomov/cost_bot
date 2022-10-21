@@ -7,6 +7,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import uz.maniac4j.model.*;
 import uz.maniac4j.repository.TelegramUserRepository;
 import uz.maniac4j.service.ItemService;
@@ -43,38 +45,71 @@ public class MessageTemplate {
 //        col.add(Translations.BACK.getRu(),Translations.BACK.name());
         return SendMessage.builder()
                 .chatId(user.getId())
-                .text("Xush kelibsiz!")
+                .text(Translations.TXT_MAIN.getRu())
                 .replyMarkup(col.getMarkup())
                 .parseMode(ParseMode.MARKDOWN)
                 .build();
     }
 
+    public List<PartialBotApiMethod<? extends Serializable>> mainMenuEdit(TelegramUser user, Integer messageId){
+        Col col=new Col();
 
-    //Razdellarni tanlash
+
+        col.add(Translations.ADD_REQUEST.getRu(), Translations.ADD_REQUEST.name());
+        Request last = requestService.getLast(user);
+        if (last!=null) col.add(Translations.DRAFT_REQUEST.getRu(),Translations.DRAFT_REQUEST.name());
+
+//        col.add("Yangi zayavka yaratish!");
+
+//        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+        List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
+        list.add(editText(user, Translations.TXT_MAIN.getRu(), messageId));
+        list.add(editReplyMarkup(user, col.getMarkup(), messageId));
+        return list;
+//        return SendMessage.builder()
+//                .chatId(user.getId())
+//                .text(Translations.TXT_MAIN.getRu())
+//                .replyMarkup(col.getMarkup())
+//                .parseMode(ParseMode.MARKDOWN)
+//                .build();
+    }
+
+
+//    public List<PartialBotApiMethod<? extends Serializable>> editTextAndReplyMarkup(TelegramUser user, Integer messageId, String text, InlineKeyboardMarkup markup){
+//
+//        List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
+//        list.add(editText(user, text, messageId));
+//        list.add(editReplyMarkup(user, markup, messageId));
+//        return list;
+//
+//    }
+
+
+
 //    public SendMessage sectionSelect(TelegramUser user){
 //        return sectionSelect(user,false);
 //    }
 
 
-
+    //Razdellarni tanlash
     public SendMessage sectionSelect(TelegramUser user, boolean isNew){
-        Request request = requestService.getLast(user);
-        if (isNew||request==null){
+//        Request request = requestService.getLast(user);
+//        if (isNew||request==null){
 //            requestService.reset(user);
             return SendMessage.builder()
                     .chatId(user.getId())
-                    .text("Section tanlang")
+                    .text(Translations.TXT_SECTION.getRu())
                     .replyMarkup(sectionSelect(user))
                     .parseMode(ParseMode.MARKDOWN)
                     .build();
-        }else {
-            return SendMessage.builder()
-                    .chatId(user.getId())
-                    .text("Section tanlang")
-                    .replyMarkup(sectionSelect(user))
-                    .parseMode(ParseMode.MARKDOWN)
-                    .build();
-        }
+//        }else {
+//            return SendMessage.builder()
+//                    .chatId(user.getId())
+//                    .text("Section tanlang")
+//                    .replyMarkup(sectionSelect(user))
+//                    .parseMode(ParseMode.MARKDOWN)
+//                    .build();
+//        }
 
     }
 
@@ -85,14 +120,12 @@ public class MessageTemplate {
         if (request!=null){
             List<Item> items = itemService.allByRequest(request);
             for (Section section : Section.values()) {
-                col.add("➕ "+section.name(),section.name());
+                col.add("➕ "+section.getRu(),section.name());
                 for (Item item : items) {
                     if (item.getSection().equals(section)){
                         Row row=new Row();
                         row.add(item.getName());
                         row.add(String.valueOf(item.getAmount()));
-//                    row.add("-");
-//                    row.add("+");
                         row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
                         col.add(row);
                     }
@@ -105,7 +138,7 @@ public class MessageTemplate {
         }else {
             requestService.reset(user);
             for (Section section : Section.values()) {
-                col.add("➕ "+section.name(),section.name());
+                col.add("➕ "+section.getRu(),section.name());
             }
             col.add(Translations.BACK.getRu(),Translations.BACK.name());
             return col.getMarkup();
@@ -127,7 +160,7 @@ public class MessageTemplate {
                 .build();
     }
     public SendMessage addItem(TelegramUser user){
-        return addItem(user,user.getSection().getRu() + " ga maxsulotni quyidagicha yuboring:\n name:amount:note");
+        return addItem(user,"*"+user.getSection().getRu() +"*"+Translations.TXT_PRODUCT.getRu());
     }
 
     public SendMessage confirmRequestMessage(TelegramUser user){
@@ -137,7 +170,7 @@ public class MessageTemplate {
         String itemList="";
         int counter=0;
         if (items.size()>0){
-            text+="*\uD83D\uDCDD Zayavka\n*";
+            text+="*\uD83D\uDCDD Заявка\n*";
             for (Section section : Section.values()) {
                 itemList="";
                 counter=0;
@@ -149,7 +182,7 @@ public class MessageTemplate {
                 }
                 if (itemList.length()>1) text+="\n✳ *"+section.getRu()+"* : \n"+itemList;
             }
-            text+="\n\n*Zayavkani tasdiqlaysizmi?*";
+            text+=Translations.TXT_REQUEST_QUESTION.getRu();
         }
         Col col=new Col();
         Row row=new Row();
@@ -166,7 +199,7 @@ public class MessageTemplate {
     }
 
     public SendMessage confirm(TelegramUser user) {
-        return SendMessage.builder().chatId(user.getId()).text("Request yuborildi!").build();
+        return SendMessage.builder().chatId(user.getId()).text(Translations.TXT_SEND_REQUEST.getRu()).build();
     }
 
 
@@ -195,6 +228,7 @@ public class MessageTemplate {
         return editMessageReplyMarkup;
     }
 
+
     public List<PartialBotApiMethod<? extends Serializable>> editTextAndReplyMarkup(TelegramUser user, Integer messageId, String text, InlineKeyboardMarkup markup){
 
         List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
@@ -203,4 +237,5 @@ public class MessageTemplate {
         return list;
 
     }
+
 }
