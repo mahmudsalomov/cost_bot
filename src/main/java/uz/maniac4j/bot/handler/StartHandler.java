@@ -8,6 +8,7 @@ import uz.maniac4j.component.MessageTemplate;
 import uz.maniac4j.model.State;
 import uz.maniac4j.model.TelegramUser;
 import uz.maniac4j.model.Translations;
+import uz.maniac4j.service.SheetService;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -20,23 +21,28 @@ import java.util.Objects;
 public class StartHandler implements Handler{
 
     private final MessageTemplate messageTemplate;
+    private final SheetService sheetService;
 
-    public StartHandler(MessageTemplate messageTemplate) {
+    public StartHandler(MessageTemplate messageTemplate, SheetService sheetService) {
         this.messageTemplate = messageTemplate;
+        this.sheetService = sheetService;
     }
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, String message) throws IOException {
-        System.out.println(user);
-        System.out.println(message);
-        if (Objects.equals(message, "start")||Objects.equals(message, "/start")) return Collections.singletonList(messageTemplate.mainMenu(user));
+//        System.out.println(user);
+//        System.out.println(message);
+        if (Objects.equals(message, "start")||Objects.equals(message, "/start")) {
+//            sheetService.write();
+            return Collections.singletonList(messageTemplate.mainMenu(user));
+        }
         return null;
     }
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, CallbackQuery callback) throws IOException {
         String text=callback.getData();
-        System.out.println("START HANDLER");
+//        System.out.println("START HANDLER");
         SendMessage sendMessage = messageTemplate.sectionSelect(user, true);
 
 //        if (text.equals(Translations.ADD_REQUEST.name())) return messageTemplate.editTextAndReplyMarkup(user,callback.getMessage().getMessageId(),sendMessage.getText(),messageTemplate.sectionSelect(user));

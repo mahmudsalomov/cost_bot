@@ -52,7 +52,7 @@ public class TelegramUser {
         this.username=user.getUserName();
         this.firstname=user.getFirstName();
         this.lastname=user.getLastName();
-        this.state = State.FIRST;
+//        this.state = State.FIRST;
         this.current_category_id=1;
     }
 

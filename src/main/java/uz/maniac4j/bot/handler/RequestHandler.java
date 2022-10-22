@@ -24,14 +24,13 @@ public class RequestHandler implements Handler{
 
     private final RequestService requestService;
     private final ItemService itemService;
-    private final ItemHandler itemHandler;
+//    private final ItemHandler itemHandler;
     private final TelegramUserRepository telegramUserRepository;
 
-    public RequestHandler(MessageTemplate messageTemplate, RequestService requestService, ItemService itemService, ItemHandler itemHandler, TelegramUserRepository telegramUserRepository) {
+    public RequestHandler(MessageTemplate messageTemplate, RequestService requestService, ItemService itemService, TelegramUserRepository telegramUserRepository) {
         this.messageTemplate = messageTemplate;
         this.requestService = requestService;
         this.itemService = itemService;
-        this.itemHandler = itemHandler;
         this.telegramUserRepository = telegramUserRepository;
     }
 
@@ -39,7 +38,7 @@ public class RequestHandler implements Handler{
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, String message) throws IOException {
 
         String[] strings = message.split(":");
-        System.out.println(Arrays.toString(strings));
+//        System.out.println(Arrays.toString(strings));
 
         if (strings.length>=2){
             try {
@@ -63,10 +62,11 @@ public class RequestHandler implements Handler{
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, CallbackQuery callback) throws IOException {
         String text=callback.getData();
-        System.out.println("REQUEST HANDLER");
+//        System.out.println("REQUEST HANDLER");
 
         Section section = checkSection(text);
         if (section!=null){
+
             user.setSection(section);
             user.setState(State.SECOND);
             user=telegramUserRepository.save(user);
@@ -98,6 +98,7 @@ public class RequestHandler implements Handler{
 
         if (text.equals(Translations.CONFIRM_REQUEST.name())) {
             Request confirm = requestService.confirm(user);
+
             List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
             list.add(messageTemplate.confirm(user));
             list.add(messageTemplate.mainMenu(user));

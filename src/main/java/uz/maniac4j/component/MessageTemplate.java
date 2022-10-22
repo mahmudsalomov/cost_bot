@@ -93,12 +93,17 @@ public class MessageTemplate {
 
     //Razdellarni tanlash
     public SendMessage sectionSelect(TelegramUser user, boolean isNew){
+        if (isNew) {
+            user.setSection(null);
+            user=telegramUserRepository.save(user);
+//            requestService.reset(user);
+        }
 //        Request request = requestService.getLast(user);
 //        if (isNew||request==null){
 //            requestService.reset(user);
             return SendMessage.builder()
                     .chatId(user.getId())
-                    .text(Translations.TXT_SECTION.getRu())
+                    .text(user.getSection()==null?Translations.TXT_SECTION.getRu():user.getSection().getRu())
                     .replyMarkup(sectionSelect(user))
                     .parseMode(ParseMode.MARKDOWN)
                     .build();
@@ -115,6 +120,29 @@ public class MessageTemplate {
 
 
     public InlineKeyboardMarkup sectionSelect(TelegramUser user){
+
+        if (user.getSection()!=null){
+            requestService.sectionReset(user);
+            Col col=new Col();
+            Section section=user.getSection();
+            Request request = requestService.getLast(user);
+            List<Item> items = itemService.allByRequest(request);
+            col.add("➕ "+Translations.ADD.getRu(),section.name());
+            for (Item item : items) {
+                if (item.getSection().equals(section)){
+                    Row row=new Row();
+                    row.add(item.getName());
+                    row.add(String.valueOf(item.getAmount()));
+                    row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
+                    col.add(row);
+                }
+            }
+            if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
+
+            col.add(Translations.BACK.getRu(),Translations.BACK.name());
+            return col.getMarkup();
+        }
+
         Request request = requestService.getLast(user);
         Col col=new Col();
         if (request!=null){

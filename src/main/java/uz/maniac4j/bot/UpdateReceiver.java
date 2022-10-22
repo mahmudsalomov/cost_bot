@@ -71,7 +71,7 @@ public class UpdateReceiver {
             if (update.hasMessage()){
 
                 final Message message = update.getMessage();
-                System.out.println(message);
+//                System.out.println(message);
 //                update.getMessage().getFrom();
 
 
@@ -87,8 +87,8 @@ public class UpdateReceiver {
 
 
                     telegramUserRepository.save(user);
-                    System.out.println(handlers);
-                    System.out.println(handlers.size());
+//                    System.out.println(handlers);
+//                    System.out.println(handlers.size());
                     handlers.forEach(System.out::println);
                     TelegramUser finalUser = user;
                     handlers.forEach(h-> System.out.println(h.operatedCallBackQuery(finalUser)));
@@ -118,11 +118,11 @@ public class UpdateReceiver {
 
             else if (update.hasCallbackQuery()) {
 
-                System.out.println(update.getCallbackQuery().getData());
+//                System.out.println(update.getCallbackQuery().getData());
                 final CallbackQuery callbackQuery = update.getCallbackQuery();
                 final Long chatId = callbackQuery.getFrom().getId();
                 String message=callbackQuery.getData();
-                System.out.println(update.getCallbackQuery().getData());
+//                System.out.println(update.getCallbackQuery().getData());
                 final TelegramUser user = telegramUserRepository.findById(chatId)
                         .orElseGet(() -> telegramUserRepository.save(new TelegramUser(callbackQuery.getFrom())));
 //                if (user.getState().equals(State.ORDER)) results.add(messageTemplate.removeProcess(user));
