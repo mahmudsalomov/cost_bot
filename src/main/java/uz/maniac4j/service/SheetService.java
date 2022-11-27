@@ -106,12 +106,25 @@ public class SheetService {
         String pattern = "MM.dd.yyyy HH:mm:ss";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         for (Item item : items) {
+//            i++;
+//            temp=new ArrayList<>();
+//            temp.add(i);
+//            temp.add(item.getName());
+//            temp.add(String.valueOf(item.getAmount()));
+//            temp.add(item.getSection().getRu());
+//            temp.add(simpleDateFormat.format(new Date()));
+//            temp.add(request.getUser().getId().toString());
+//            temp.add(request.getUser().getUsername()!=null?"@"+request.getUser().getUsername():"");
+//            temp.add(item.getDescription());
+//            all.add(temp);
+
             i++;
             temp=new ArrayList<>();
             temp.add(i);
-            temp.add(item.getName());
-            temp.add(String.valueOf(item.getAmount()));
             temp.add(item.getSection().getRu());
+            temp.add(item.getSectionType().getRu());
+            temp.add(String.valueOf(item.getAmount()));
+//            temp.add(item.getName());
             temp.add(simpleDateFormat.format(new Date()));
             temp.add(request.getUser().getId().toString());
             temp.add(request.getUser().getUsername()!=null?"@"+request.getUser().getUsername():"");

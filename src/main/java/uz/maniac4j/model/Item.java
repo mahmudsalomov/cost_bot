@@ -18,7 +18,7 @@ public class Item {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String name;
+//    private String name;
 
     private String amount;
 
@@ -26,6 +26,9 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private Section section;
+
+    @Enumerated(EnumType.STRING)
+    private SectionType sectionType;
 
     @ManyToOne
     private Request request;

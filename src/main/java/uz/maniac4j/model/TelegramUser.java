@@ -30,6 +30,9 @@ public class TelegramUser {
     @Enumerated(EnumType.STRING)
     private Section section;
 
+    @Enumerated(EnumType.STRING)
+    private SectionType sectionType;
+
     @Column(columnDefinition = "text")
     private String location;
 

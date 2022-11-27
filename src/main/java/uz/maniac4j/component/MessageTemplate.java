@@ -19,6 +19,7 @@ import uz.maniac4j.utils.ButtonModel.Row;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class MessageTemplate {
@@ -92,6 +93,26 @@ public class MessageTemplate {
 
 
     //Razdellarni tanlash
+
+    public SendMessage sectionTypeSelect(TelegramUser user){
+
+        Col col=new Col();
+        Row row=new Row();
+        for (SectionType type : SectionType.values()) {
+            row.add(type.getRu(), type.name());
+        }
+        col.add(row);
+        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+
+
+        return SendMessage.builder()
+                .chatId(user.getId())
+                .text(user.getSection()==null?Translations.TXT_SECTION_TYPE.getRu():user.getSection().getRu())
+                .replyMarkup(col.getMarkup())
+                .parseMode(ParseMode.MARKDOWN)
+                .build();
+
+    }
     public SendMessage sectionSelect(TelegramUser user, boolean isNew){
         if (isNew) {
             user.setSection(null);
@@ -103,7 +124,7 @@ public class MessageTemplate {
 //            requestService.reset(user);
             return SendMessage.builder()
                     .chatId(user.getId())
-                    .text(user.getSection()==null?Translations.TXT_SECTION.getRu():user.getSection().getRu())
+                    .text(user.getSection()==null?"__"+user.getSectionType().getRu()+"__\n\n"+Translations.TXT_SECTION.getRu():user.getSectionType().getRu()+"\n"+user.getSection().getRu())
                     .replyMarkup(sectionSelect(user))
                     .parseMode(ParseMode.MARKDOWN)
                     .build();
@@ -121,6 +142,21 @@ public class MessageTemplate {
 
     public InlineKeyboardMarkup sectionSelect(TelegramUser user){
 
+        List<Section> sections=new ArrayList<>();
+        if (user.getSectionType().equals(SectionType.FIRST_TYPE)){
+            sections.add(Section.FIRST);
+            sections.add(Section.SECOND);
+            sections.add(Section.THIRD);
+            sections.add(Section.FOURTH);
+            sections.add(Section.FIFTH);
+            sections.add(Section.SIXTH);
+        } else {
+            sections.add(Section.SEVENTH);
+            sections.add(Section.EIGHTH);
+            sections.add(Section.NINTH);
+            sections.add(Section.TENTH);
+            sections.add(Section.ELEVENTH);
+        }
         if (user.getSection()!=null){
             requestService.sectionReset(user);
             Col col=new Col();
@@ -131,8 +167,9 @@ public class MessageTemplate {
             for (Item item : items) {
                 if (item.getSection().equals(section)){
                     Row row=new Row();
-                    row.add(item.getName());
                     row.add(String.valueOf(item.getAmount()));
+                    if (item.getDescription()!=null&& !Objects.equals(item.getDescription(), ""))
+                        row.add(item.getDescription());
                     row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
                     col.add(row);
                 }
@@ -147,13 +184,14 @@ public class MessageTemplate {
         Col col=new Col();
         if (request!=null){
             List<Item> items = itemService.allByRequest(request);
-            for (Section section : Section.values()) {
+            for (Section section : sections) {
                 col.add("➕ "+section.getRu(),section.name());
                 for (Item item : items) {
                     if (item.getSection().equals(section)){
                         Row row=new Row();
-                        row.add(item.getName());
                         row.add(String.valueOf(item.getAmount()));
+                        if (item.getDescription()!=null&& !Objects.equals(item.getDescription(), ""))
+                        row.add(item.getDescription());
                         row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
                         col.add(row);
                     }
@@ -165,7 +203,8 @@ public class MessageTemplate {
             return col.getMarkup();
         }else {
             requestService.reset(user);
-            for (Section section : Section.values()) {
+
+            for (Section section : sections) {
                 col.add("➕ "+section.getRu(),section.name());
             }
             col.add(Translations.BACK.getRu(),Translations.BACK.name());
@@ -188,7 +227,10 @@ public class MessageTemplate {
                 .build();
     }
     public SendMessage addItem(TelegramUser user){
-        return addItem(user,"*"+user.getSection().getRu() +"*"+Translations.TXT_PRODUCT.getRu());
+        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
+            return addItem(user,"__"+user.getSectionType().getRu()+"__\n\n"+"*"+user.getSection().getRu() +"*\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
+        }
+        return addItem(user,"__"+user.getSectionType().getRu()+"__\n\n"+"*"+user.getSection().getRu() +"*\n"+Translations.TXT_PRODUCT.getRu());
     }
 
     public SendMessage confirmRequestMessage(TelegramUser user){
@@ -205,7 +247,7 @@ public class MessageTemplate {
                 for (Item item : items) {
                     if (item.getSection().equals(section)){
                         counter++;
-                        itemList+="*"+counter+" - *"+item.getName()+" \uD83D\uDD8A "+item.getAmount()+" \uD83D\uDD8A "+item.getDescription()+"\n";
+                        itemList+="*"+counter+" - *"+item.getAmount()+" \uD83D\uDD8A "+item.getDescription()+"\n";
                     }
                 }
                 if (itemList.length()>1) text+="\n✳ *"+section.getRu()+"* : \n"+itemList;

@@ -40,7 +40,12 @@ public class RequestHandler implements Handler{
         String[] strings = message.split(":");
 //        System.out.println(Arrays.toString(strings));
 
-        if (strings.length>=2){
+        if (strings.length>=1){
+
+            if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
+                if (strings.length<2) return Collections.singletonList(messageTemplate.addItem(user,"Введите номер заказа правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));
+            }
+
 //            try {
 //                Integer.parseInt(strings[1].replace(" ",""));
 //            }catch (Exception e){
@@ -48,9 +53,10 @@ public class RequestHandler implements Handler{
 //            }
             Item item = Item.builder()
                     .section(user.getSection())
-                    .name(strings[0])
-                    .amount(strings[1].replace(" ",""))
-                    .description(strings.length == 3 ? strings[2] : "")
+                    .sectionType(typeFinder(user.getSection()))
+//                    .name(strings[0])
+                    .amount(strings[0])
+                    .description(strings.length>1?strings[1]:" ")
                     .build();
             item = itemService.add(user, item);
             return Collections.singletonList(messageTemplate.sectionSelect(user,false));
@@ -63,6 +69,15 @@ public class RequestHandler implements Handler{
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, CallbackQuery callback) throws IOException {
         String text=callback.getData();
 //        System.out.println("REQUEST HANDLER");
+
+        SectionType sectionType = checkSectionType(text);
+
+        if (sectionType!=null){
+            user.setSectionType(sectionType);
+            user=telegramUserRepository.save(user);
+            return Collections.singletonList(messageTemplate.sectionSelect(user,true));
+        }
+
 
         Section section = checkSection(text);
         if (section!=null){
@@ -122,6 +137,9 @@ public class RequestHandler implements Handler{
         for (Section section : Section.values()) {
             result.add(section.name());
         }
+        for (SectionType section : SectionType.values()) {
+            result.add(section.name());
+        }
         result.add(Translations.SEND_REQUEST.name());
         result.add(Translations.BACK.name());
         result.add(Translations.BACK_SECTION.name());
@@ -148,6 +166,22 @@ public class RequestHandler implements Handler{
                 return section;
         }
         return null;
+    }
+
+    public SectionType checkSectionType(String text){
+        for (SectionType type : SectionType.values()) {
+            if (type.name().equals(text))
+                return type;
+        }
+        return null;
+    }
+
+    public static SectionType typeFinder(Section section){
+        if (section.equals(Section.FIRST)||section.equals(Section.SECOND)||section.equals(Section.THIRD)||section.equals(Section.FOURTH)||section.equals(Section.FIFTH)||section.equals(Section.SIXTH)){
+            return SectionType.FIRST_TYPE;
+        } else {
+            return SectionType.SECOND_TYPE;
+        }
     }
 
 }

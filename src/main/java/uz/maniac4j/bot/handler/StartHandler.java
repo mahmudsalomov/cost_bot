@@ -43,10 +43,11 @@ public class StartHandler implements Handler{
     public List<PartialBotApiMethod<? extends Serializable>> handle(TelegramUser user, CallbackQuery callback) throws IOException {
         String text=callback.getData();
 //        System.out.println("START HANDLER");
-        SendMessage sendMessage = messageTemplate.sectionSelect(user, true);
+//        SendMessage sendMessage = messageTemplate.sectionSelect(user, true);
 
 //        if (text.equals(Translations.ADD_REQUEST.name())) return messageTemplate.editTextAndReplyMarkup(user,callback.getMessage().getMessageId(),sendMessage.getText(),messageTemplate.sectionSelect(user));
-        if (text.equals(Translations.ADD_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user, true));
+//        if (text.equals(Translations.ADD_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionSelect(user, true));
+        if (text.equals(Translations.ADD_REQUEST.name())) return Collections.singletonList(messageTemplate.sectionTypeSelect(user));
         return null;
     }
 

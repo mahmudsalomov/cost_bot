@@ -35,14 +35,14 @@ public class ItemService {
 
 
     //Nomni tahrirlash uchun maxsus
-    public Item changeName(Long itemId, String name){
-        Optional<Item> byId = itemRepository.findById(itemId);
-        if (byId.isPresent()){
-            byId.get().setName(name);
-            return edit(byId.get());
-        }
-        return null;
-    }
+//    public Item changeName(Long itemId, String name){
+//        Optional<Item> byId = itemRepository.findById(itemId);
+//        if (byId.isPresent()){
+//            byId.get().setName(name);
+//            return edit(byId.get());
+//        }
+//        return null;
+//    }
 
     //Sonini tahrirlash uchun maxsus
     public Item changeAmount(Long itemId, String amount){
