@@ -41,15 +41,15 @@ public class RequestHandler implements Handler{
 //        System.out.println(Arrays.toString(strings));
 
         if (strings.length>=2){
-            try {
-                Integer.parseInt(strings[1].replace(" ",""));
-            }catch (Exception e){
-                return Collections.singletonList(messageTemplate.addItem(user,"Введите количество товаров правильно!\n"+user.getSection().getRu() + Translations.TXT_PRODUCT.getRu()));
-            }
+//            try {
+//                Integer.parseInt(strings[1].replace(" ",""));
+//            }catch (Exception e){
+//                return Collections.singletonList(messageTemplate.addItem(user,"Введите количество товаров правильно!\n"+user.getSection().getRu() + Translations.TXT_PRODUCT.getRu()));
+//            }
             Item item = Item.builder()
                     .section(user.getSection())
                     .name(strings[0])
-                    .amount(Integer.parseInt(strings[1].replace(" ","")))
+                    .amount(strings[1].replace(" ",""))
                     .description(strings.length == 3 ? strings[2] : "")
                     .build();
             item = itemService.add(user, item);

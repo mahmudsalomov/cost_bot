@@ -45,7 +45,7 @@ public class ItemService {
     }
 
     //Sonini tahrirlash uchun maxsus
-    public Item changeAmount(Long itemId, int amount){
+    public Item changeAmount(Long itemId, String amount){
         Optional<Item> byId = itemRepository.findById(itemId);
         if (byId.isPresent()){
             byId.get().setAmount(amount);
@@ -73,7 +73,7 @@ public class ItemService {
 //                request.setSent(true);
 //                requestRepository.save(request);
                 requestService.reset(user);
-                System.out.println(requestRepository.findAll());
+//                System.out.println(requestRepository.findAll());
             }
         }
     }

@@ -91,7 +91,7 @@ public class UpdateReceiver {
 //                    System.out.println(handlers.size());
                     handlers.forEach(System.out::println);
                     TelegramUser finalUser = user;
-                    handlers.forEach(h-> System.out.println(h.operatedCallBackQuery(finalUser)));
+//                    handlers.forEach(h-> System.out.println(h.operatedCallBackQuery(finalUser)));
 
 
                     Optional<TelegramUser> byId = telegramUserRepository.findById(user.getId());

@@ -44,7 +44,7 @@ public class TestInterface <T>{
     public String parseString(String str,int index){
         try {
             String[] parts = str.split("-");
-            System.out.println(Arrays.toString(parts));
+//            System.out.println(Arrays.toString(parts));
             if (index<0||parts.length<=index) return "";
             return parts[index];
         }catch (Exception e){

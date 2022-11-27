@@ -20,7 +20,7 @@ public class Item {
 
     private String name;
 
-    private int amount;
+    private String amount;
 
     private String description;
 
