@@ -45,14 +45,14 @@ public class ItemService {
 //    }
 
     //Sonini tahrirlash uchun maxsus
-    public Item changeAmount(Long itemId, String amount){
-        Optional<Item> byId = itemRepository.findById(itemId);
-        if (byId.isPresent()){
-            byId.get().setAmount(amount);
-            return edit(byId.get());
-        }
-        return null;
-    }
+//    public Item changeAmount(Long itemId, String amount){
+//        Optional<Item> byId = itemRepository.findById(itemId);
+//        if (byId.isPresent()){
+//            byId.get().setAmount(amount);
+//            return edit(byId.get());
+//        }
+//        return null;
+//    }
 
     //Section bo'yicha yangi yaratish uchun maxsus
     public Item firstAdd(TelegramUser user, Section section){

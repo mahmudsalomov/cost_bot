@@ -90,7 +90,7 @@ public class SheetService {
         List<String> ranges = service.spreadsheets().get(sheetId).getRanges();
 //        System.out.println("Ranges");
 //        System.out.println(ranges);
-        BatchGetValuesResponse batchGetValuesResponseI1 = batchGetValues(sheetId, List.of("I1"));
+        BatchGetValuesResponse batchGetValuesResponseI1 = batchGetValues(sheetId, List.of("J1"));
 
 
 
@@ -121,9 +121,10 @@ public class SheetService {
             i++;
             temp=new ArrayList<>();
             temp.add(i);
-            temp.add(item.getSection().getRu());
             temp.add(item.getSectionType().getRu());
-            temp.add(String.valueOf(item.getAmount()));
+            temp.add(item.getSection().getRu());
+            temp.add(item.getAmount());
+            temp.add(item.getAmountUsd());
 //            temp.add(item.getName());
             temp.add(simpleDateFormat.format(new Date()));
             temp.add(request.getUser().getId().toString());

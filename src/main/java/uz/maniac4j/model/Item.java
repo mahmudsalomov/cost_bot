@@ -20,7 +20,8 @@ public class Item {
 
 //    private String name;
 
-    private String amount;
+    private long amount;
+    private long amountUsd;
 
     private String description;
 
@@ -29,6 +30,9 @@ public class Item {
 
     @Enumerated(EnumType.STRING)
     private SectionType sectionType;
+
+//    @Enumerated(EnumType.STRING)
+//    private AmountType amountType;
 
     @ManyToOne
     private Request request;

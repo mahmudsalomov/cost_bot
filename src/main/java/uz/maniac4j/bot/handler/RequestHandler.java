@@ -42,8 +42,16 @@ public class RequestHandler implements Handler{
 
         if (strings.length>=1){
 
+//            String noteOrNumber="";
+//            long uzs=0;
+//            long usd=0;
+
+            ReceiveDto receive = ReceiveDto.receive(strings);
+            if (receive==null) return Collections.singletonList(messageTemplate.addItem(user,"Введите правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));;
+
+
             if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
-                if (strings.length<2) return Collections.singletonList(messageTemplate.addItem(user,"Введите номер заказа правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));
+                if (receive.noteOrNumber==null|| receive.noteOrNumber.replace(" ","").equals("")) return Collections.singletonList(messageTemplate.addItem(user,"Введите номер заказа правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));
             }
 
 //            try {
@@ -55,8 +63,9 @@ public class RequestHandler implements Handler{
                     .section(user.getSection())
                     .sectionType(typeFinder(user.getSection()))
 //                    .name(strings[0])
-                    .amount(strings[0])
-                    .description(strings.length>1?strings[1]:" ")
+                    .amount(receive.amount)
+                    .amountUsd(receive.amountUsd)
+                    .description(receive.noteOrNumber != null ? receive.noteOrNumber:" ")
                     .build();
             item = itemService.add(user, item);
             return Collections.singletonList(messageTemplate.sectionSelect(user,false));

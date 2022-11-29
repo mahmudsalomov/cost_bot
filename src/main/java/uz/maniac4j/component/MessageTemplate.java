@@ -107,9 +107,9 @@ public class MessageTemplate {
 
         return SendMessage.builder()
                 .chatId(user.getId())
-                .text(user.getSection()==null?Translations.TXT_SECTION_TYPE.getRu():user.getSection().getRu())
+                .text(Translations.TXT_SECTION.getRu())
                 .replyMarkup(col.getMarkup())
-                .parseMode(ParseMode.MARKDOWN)
+                .parseMode(ParseMode.HTML)
                 .build();
 
     }
@@ -124,9 +124,9 @@ public class MessageTemplate {
 //            requestService.reset(user);
             return SendMessage.builder()
                     .chatId(user.getId())
-                    .text(user.getSection()==null?"__"+user.getSectionType().getRu()+"__\n\n"+Translations.TXT_SECTION.getRu():user.getSectionType().getRu()+"\n"+user.getSection().getRu())
+                    .text(user.getSection()==null?"<i>"+user.getSectionType().getRu()+"</i>\n\n"+Translations.TXT_SECTION.getRu():user.getSectionType().getRu()+"\n"+user.getSection().getRu())
                     .replyMarkup(sectionSelect(user))
-                    .parseMode(ParseMode.MARKDOWN)
+                    .parseMode(ParseMode.HTML)
                     .build();
 //        }else {
 //            return SendMessage.builder()
@@ -164,16 +164,7 @@ public class MessageTemplate {
             Request request = requestService.getLast(user);
             List<Item> items = itemService.allByRequest(request);
             col.add("➕ "+Translations.ADD.getRu(),section.name());
-            for (Item item : items) {
-                if (item.getSection().equals(section)){
-                    Row row=new Row();
-                    row.add(String.valueOf(item.getAmount()));
-                    if (item.getDescription()!=null&& !Objects.equals(item.getDescription(), ""))
-                        row.add(item.getDescription());
-                    row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
-                    col.add(row);
-                }
-            }
+            itemer(col, section, items);
             if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
 
             col.add(Translations.BACK.getRu(),Translations.BACK.name());
@@ -186,16 +177,7 @@ public class MessageTemplate {
             List<Item> items = itemService.allByRequest(request);
             for (Section section : sections) {
                 col.add("➕ "+section.getRu(),section.name());
-                for (Item item : items) {
-                    if (item.getSection().equals(section)){
-                        Row row=new Row();
-                        row.add(String.valueOf(item.getAmount()));
-                        if (item.getDescription()!=null&& !Objects.equals(item.getDescription(), ""))
-                        row.add(item.getDescription());
-                        row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
-                        col.add(row);
-                    }
-                }
+                itemer(col, section, items);
             }
             if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
 
@@ -212,6 +194,20 @@ public class MessageTemplate {
         }
     }
 
+    private void itemer(Col col, Section section, List<Item> items) {
+        for (Item item : items) {
+            if (item.getSection().equals(section)){
+                Row row=new Row();
+                System.out.println(item);
+                if (item.getAmount()!=0) row.add(String.valueOf(item.getAmount()));
+                if (item.getAmountUsd()!=0) row.add("$"+item.getAmountUsd());
+                if (item.getDescription()!=null&& !Objects.equals(item.getDescription(), ""))
+                    row.add(item.getDescription());
+                row.add(Translations.DELETE_ITEM.getRu(),Translations.DELETE_ITEM.name()+":"+item.getId());
+                col.add(row);
+            }
+        }
+    }
 
 
     //Mahsulot qo'shishni so'rash
@@ -223,14 +219,14 @@ public class MessageTemplate {
                 .chatId(user.getId())
                 .text(text)
                 .replyMarkup(col.getMarkup())
-                .parseMode(ParseMode.MARKDOWN)
+                .parseMode(ParseMode.HTML)
                 .build();
     }
     public SendMessage addItem(TelegramUser user){
         if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
-            return addItem(user,"__"+user.getSectionType().getRu()+"__\n\n"+"*"+user.getSection().getRu() +"*\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
+            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
         }
-        return addItem(user,"__"+user.getSectionType().getRu()+"__\n\n"+"*"+user.getSection().getRu() +"*\n"+Translations.TXT_PRODUCT.getRu());
+        return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
     }
 
     public SendMessage confirmRequestMessage(TelegramUser user){
@@ -240,17 +236,19 @@ public class MessageTemplate {
         String itemList="";
         int counter=0;
         if (items.size()>0){
-            text+="*\uD83D\uDCDD Заявка\n*";
+            text+="<b>\uD83D\uDCDD Заявка</b>\n";
             for (Section section : Section.values()) {
                 itemList="";
                 counter=0;
                 for (Item item : items) {
                     if (item.getSection().equals(section)){
                         counter++;
-                        itemList+="*"+counter+" - *"+item.getAmount()+" \uD83D\uDD8A "+item.getDescription()+"\n";
+                        if (!Objects.equals(item.getAmount(), "0") && !Objects.equals(item.getAmountUsd(), "0")){
+                            itemList+="<b>"+counter+" - </b>"+item.getAmount()+"сум \uD83D\uDD8A "+item.getAmountUsd()+"$ \uD83D\uDD8A "+item.getDescription()+"\n";
+                        } else itemList+="<b>"+counter+" - </b>"+(item.getAmount()!=0?item.getAmount():item.getAmountUsd())+" \uD83D\uDD8A "+item.getDescription()+"\n";
                     }
                 }
-                if (itemList.length()>1) text+="\n✳ *"+section.getRu()+"* : \n"+itemList;
+                if (itemList.length()>1) text+="\n✳ <b>"+section.getRu()+"</b> : \n"+itemList;
             }
             text+=Translations.TXT_REQUEST_QUESTION.getRu();
         }
@@ -264,7 +262,7 @@ public class MessageTemplate {
                 .chatId(user.getId())
                 .text(text)
                 .replyMarkup(col.getMarkup())
-                .parseMode(ParseMode.MARKDOWN)
+                .parseMode(ParseMode.HTML)
                 .build();
     }
 
