@@ -236,16 +236,16 @@ public class MessageTemplate {
         String itemList="";
         int counter=0;
         if (items.size()>0){
-            text+="<b>\uD83D\uDCDD Заявка</b>\n";
+            text+="<b>\uD83D\uDCDD Расходы</b>\n";
             for (Section section : Section.values()) {
                 itemList="";
                 counter=0;
                 for (Item item : items) {
                     if (item.getSection().equals(section)){
                         counter++;
-                        if (!Objects.equals(item.getAmount(), "0") && !Objects.equals(item.getAmountUsd(), "0")){
-                            itemList+="<b>"+counter+" - </b>"+item.getAmount()+"сум \uD83D\uDD8A "+item.getAmountUsd()+"$ \uD83D\uDD8A "+item.getDescription()+"\n";
-                        } else itemList+="<b>"+counter+" - </b>"+(item.getAmount()!=0?item.getAmount():item.getAmountUsd())+" \uD83D\uDD8A "+item.getDescription()+"\n";
+                        if (item.getAmount()!=0 && item.getAmountUsd()!=0){
+                            itemList+="<b>"+counter+" - </b>"+item.getAmount()+" сум \uD83D\uDD8A "+item.getAmountUsd()+"$ \uD83D\uDD8A "+item.getDescription()+"\n";
+                        } else itemList+="<b>"+counter+" - </b>"+(item.getAmount()!=0?item.getAmount():"$"+item.getAmountUsd())+" \uD83D\uDD8A "+item.getDescription()+"\n";
                     }
                 }
                 if (itemList.length()>1) text+="\n✳ <b>"+section.getRu()+"</b> : \n"+itemList;
