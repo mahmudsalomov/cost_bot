@@ -4,20 +4,20 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum Section {
-    FIRST("Коммуникация"),
-    SECOND("Коммуналка"),
-    THIRD("Зарплата"),
-    FOURTH("Налог"),
-    FIFTH("Хозяйственный"),
-    SIXTH("Другие"),
+    FIRST("\uD83D\uDCDE Коммуникация"),
+    SECOND("\uD83D\uDEB0 Коммуналка"),
+    THIRD("\uD83D\uDCB5 Зарплата"),
+    FOURTH("\uD83C\uDFEC Налог"),
+    FIFTH("\uD83E\uDE93 Хозяйственный"),
+    SIXTH("\uD83D\uDDD3 Другие"),
 
 
 
-    SEVENTH("Строительства"),
-    EIGHTH("Зарплата по объему"),
-    NINTH("Для заказать сырья и фурнитуры"),
-    TENTH("Перевозка"),
-    ELEVENTH("Другие");
+    SEVENTH("\uD83E\uDE9A Строительства"),
+    EIGHTH("\uD83D\uDCB0 Зарплата по объему"),
+    NINTH("\uD83D\uDCD0 Для заказать сырья и фурнитуры"),
+    TENTH("\uD83D\uDE9B Перевозка"),
+    ELEVENTH("\uD83D\uDDD3 Другие");
 
 
 
