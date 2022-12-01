@@ -176,7 +176,7 @@ public class MessageTemplate {
         if (request!=null){
             List<Item> items = itemService.allByRequest(request);
             for (Section section : sections) {
-                col.add("➕ "+section.getRu(),section.name());
+                col.add(section.getRu(),section.name());
                 itemer(col, section, items);
             }
             if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
@@ -187,7 +187,7 @@ public class MessageTemplate {
             requestService.reset(user);
 
             for (Section section : sections) {
-                col.add("➕ "+section.getRu(),section.name());
+                col.add(section.getRu(),section.name());
             }
             col.add(Translations.BACK.getRu(),Translations.BACK.name());
             return col.getMarkup();
