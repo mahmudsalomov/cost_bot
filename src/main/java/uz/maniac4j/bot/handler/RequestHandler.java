@@ -47,11 +47,11 @@ public class RequestHandler implements Handler{
 //            long usd=0;
 
             ReceiveDto receive = ReceiveDto.receive(strings);
-            if (receive==null) return Collections.singletonList(messageTemplate.addItem(user,"Введите правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));;
+            if (receive==null) return Collections.singletonList(messageTemplate.addItem(user,"Введите правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT.getRu()));;
 
 
-            if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
-                if (receive.noteOrNumber==null|| receive.noteOrNumber.replace(" ","").equals("")) return Collections.singletonList(messageTemplate.addItem(user,"Введите номер заказа правильно!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT_ANOTHER.getRu()));
+            if (user.getSection().equals(Section.CONST_6)||user.getSection().equals(Section.CHANGEABLE_2)||user.getSection().equals(Section.CHANGEABLE_16)||user.getSection().equals(Section.CHANGEABLE_17)){
+                if (receive.noteOrNumber==null|| receive.noteOrNumber.replace(" ","").equals("")) return Collections.singletonList(messageTemplate.addItem(user,"Введите примечание!\n"+user.getSection().getRu()+"\n" + Translations.TXT_PRODUCT.getRu()));
             }
 
 //            try {
@@ -186,7 +186,7 @@ public class RequestHandler implements Handler{
     }
 
     public static SectionType typeFinder(Section section){
-        if (section.equals(Section.FIRST)||section.equals(Section.SECOND)||section.equals(Section.THIRD)||section.equals(Section.FOURTH)||section.equals(Section.FIFTH)||section.equals(Section.SIXTH)){
+        if (section.equals(Section.CONST_1)||section.equals(Section.CONST_2)||section.equals(Section.CONST_3)||section.equals(Section.CONST_4)||section.equals(Section.CONST_5)||section.equals(Section.CONST_6)){
             return SectionType.FIRST_TYPE;
         } else {
             return SectionType.SECOND_TYPE;

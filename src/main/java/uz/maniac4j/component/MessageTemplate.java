@@ -144,18 +144,51 @@ public class MessageTemplate {
 
         List<Section> sections=new ArrayList<>();
         if (user.getSectionType().equals(SectionType.FIRST_TYPE)){
-            sections.add(Section.FIRST);
-            sections.add(Section.SECOND);
-            sections.add(Section.THIRD);
-            sections.add(Section.FOURTH);
-            sections.add(Section.FIFTH);
-            sections.add(Section.SIXTH);
+            sections.add(Section.CONST_1);
+            sections.add(Section.CONST_2);
+            sections.add(Section.CONST_3);
+            sections.add(Section.CONST_4);
+            sections.add(Section.CONST_5);
+            sections.add(Section.CONST_6);
+
+
+
+//
+//            sections.add(Section.FIRST);
+//            sections.add(Section.SECOND);
+//            sections.add(Section.THIRD);
+//            sections.add(Section.FOURTH);
+//            sections.add(Section.FIFTH);
+//            sections.add(Section.SIXTH);
         } else {
-            sections.add(Section.SEVENTH);
-            sections.add(Section.EIGHTH);
-            sections.add(Section.NINTH);
-            sections.add(Section.TENTH);
-            sections.add(Section.ELEVENTH);
+            sections.add(Section.CHANGEABLE_1);
+            sections.add(Section.CHANGEABLE_2);
+            sections.add(Section.CHANGEABLE_3);
+            sections.add(Section.CHANGEABLE_4);
+            sections.add(Section.CHANGEABLE_5);
+            sections.add(Section.CHANGEABLE_6);
+            sections.add(Section.CHANGEABLE_7);
+            sections.add(Section.CHANGEABLE_8);
+            sections.add(Section.CHANGEABLE_9);
+            sections.add(Section.CHANGEABLE_10);
+            sections.add(Section.CHANGEABLE_11);
+            sections.add(Section.CHANGEABLE_12);
+            sections.add(Section.CHANGEABLE_13);
+            sections.add(Section.CHANGEABLE_14);
+            sections.add(Section.CHANGEABLE_15);
+            sections.add(Section.CHANGEABLE_16);
+            sections.add(Section.CHANGEABLE_17);
+
+
+
+
+
+
+//            sections.add(Section.SEVENTH);
+//            sections.add(Section.EIGHTH);
+//            sections.add(Section.NINTH);
+//            sections.add(Section.TENTH);
+//            sections.add(Section.ELEVENTH);
         }
         if (user.getSection()!=null){
             requestService.sectionReset(user);
@@ -223,9 +256,9 @@ public class MessageTemplate {
                 .build();
     }
     public SendMessage addItem(TelegramUser user){
-        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
-            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
-        }
+//        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
+//            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
+//        }
         return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
     }
 
