@@ -19,6 +19,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import uz.maniac4j.model.Item;
 import uz.maniac4j.model.Request;
+import uz.maniac4j.model.SectionType;
 import uz.maniac4j.repository.ItemRepository;
 import uz.maniac4j.repository.RequestRepository;
 
@@ -86,6 +87,11 @@ public class SheetService {
 
     public void write(Request request,List<Item> items) throws IOException {
 
+        String sheetName="";
+        if (items.size()>0&&items.get(0).getSectionType().equals(SectionType.THIRD_TYPE)){
+            sheetName="Приход!";
+        }
+
 //        List<Item> items = itemService.allByRequest(request);
 //        System.out.println(batchGetValues(sheetId+"/edit#gid=1957132097",List.of("J1")));
 
@@ -93,12 +99,12 @@ public class SheetService {
         List<String> ranges = service.spreadsheets().get(sheetId).getRanges();
 //        System.out.println("Ranges");
 //        System.out.println(ranges);
-        BatchGetValuesResponse batchGetValuesResponseI1 = batchGetValues(sheetId, List.of("J1"));
+        BatchGetValuesResponse batchGetValuesResponseI1 = batchGetValues(sheetId, List.of(sheetName+"J1"));
 
 
 
         int size=Integer.parseInt(batchGetValuesResponseI1.getValueRanges().get(0).getValues().get(0).get(0).toString());
-        BatchGetValuesResponse batchGetValuesResponseA = batchGetValues(sheetId, List.of("A"+size));
+        BatchGetValuesResponse batchGetValuesResponseA = batchGetValues(sheetId, List.of(sheetName+"A"+size));
 
         String s = batchGetValuesResponseA.getValueRanges().get(0).getValues().get(0).get(0).toString();
         int i=0;
@@ -139,7 +145,7 @@ public class SheetService {
         ValueRange requestBody = new ValueRange()
                 .setValues(all);
         UpdateValuesResponse result = service.spreadsheets().values()
-                .update(sheetId, "A"+(size+1), requestBody)
+                .update(sheetId, sheetName+"A"+(size+1), requestBody)
                 .setValueInputOption("RAW")
                 .execute();
 //        System.out.println(result);
