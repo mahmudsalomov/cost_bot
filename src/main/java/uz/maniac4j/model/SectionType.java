@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum SectionType {
     FIRST_TYPE("\uD83C\uDFDB Постоянные расходы"),
-    SECOND_TYPE("\uD83D\uDCC8 Переменные расходы");
+    SECOND_TYPE("\uD83D\uDCC8 Переменные расходы"),
+    THIRD_TYPE("Приход");
 
 
 

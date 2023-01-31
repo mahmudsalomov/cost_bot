@@ -189,6 +189,9 @@ public class RequestHandler implements Handler{
         if (section.equals(Section.CONST_1)||section.equals(Section.CONST_2)||section.equals(Section.CONST_3)||section.equals(Section.CONST_4)||section.equals(Section.CONST_5)||section.equals(Section.CONST_6)){
             return SectionType.FIRST_TYPE;
         } else {
+            if (section.equals(Section.COMING_1)||section.equals(Section.COMING_2)){
+                return SectionType.THIRD_TYPE;
+            }
             return SectionType.SECOND_TYPE;
         }
     }

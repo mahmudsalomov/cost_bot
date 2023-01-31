@@ -9,6 +9,7 @@ import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchGetValuesResponse;
+import com.google.api.services.sheets.v4.model.CopySheetToAnotherSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.http.HttpCredentialsAdapter;
@@ -86,7 +87,9 @@ public class SheetService {
     public void write(Request request,List<Item> items) throws IOException {
 
 //        List<Item> items = itemService.allByRequest(request);
+//        System.out.println(batchGetValues(sheetId+"/edit#gid=1957132097",List.of("J1")));
 
+//        System.out.println(service.spreadsheets().get(sheetId).get("Приход"));
         List<String> ranges = service.spreadsheets().get(sheetId).getRanges();
 //        System.out.println("Ranges");
 //        System.out.println(ranges);

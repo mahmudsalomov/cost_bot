@@ -1,0 +1,1 @@
+java -jar costbot-0.1.jar

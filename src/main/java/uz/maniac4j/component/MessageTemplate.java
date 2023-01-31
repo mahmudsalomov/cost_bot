@@ -161,23 +161,29 @@ public class MessageTemplate {
 //            sections.add(Section.FIFTH);
 //            sections.add(Section.SIXTH);
         } else {
-            sections.add(Section.CHANGEABLE_1);
-            sections.add(Section.CHANGEABLE_2);
-            sections.add(Section.CHANGEABLE_3);
-            sections.add(Section.CHANGEABLE_4);
-            sections.add(Section.CHANGEABLE_5);
-            sections.add(Section.CHANGEABLE_6);
-            sections.add(Section.CHANGEABLE_7);
-            sections.add(Section.CHANGEABLE_8);
-            sections.add(Section.CHANGEABLE_9);
-            sections.add(Section.CHANGEABLE_10);
-            sections.add(Section.CHANGEABLE_11);
-            sections.add(Section.CHANGEABLE_12);
-            sections.add(Section.CHANGEABLE_13);
-            sections.add(Section.CHANGEABLE_14);
-            sections.add(Section.CHANGEABLE_15);
-            sections.add(Section.CHANGEABLE_16);
-            sections.add(Section.CHANGEABLE_17);
+            if (user.getSectionType().equals(SectionType.SECOND_TYPE)){
+                sections.add(Section.CHANGEABLE_1);
+                sections.add(Section.CHANGEABLE_2);
+                sections.add(Section.CHANGEABLE_3);
+                sections.add(Section.CHANGEABLE_4);
+                sections.add(Section.CHANGEABLE_5);
+                sections.add(Section.CHANGEABLE_6);
+                sections.add(Section.CHANGEABLE_7);
+                sections.add(Section.CHANGEABLE_8);
+                sections.add(Section.CHANGEABLE_9);
+                sections.add(Section.CHANGEABLE_10);
+                sections.add(Section.CHANGEABLE_11);
+                sections.add(Section.CHANGEABLE_12);
+                sections.add(Section.CHANGEABLE_13);
+                sections.add(Section.CHANGEABLE_14);
+                sections.add(Section.CHANGEABLE_15);
+                sections.add(Section.CHANGEABLE_16);
+                sections.add(Section.CHANGEABLE_17);
+            }
+            else {
+                sections.add(Section.COMING_1);
+                sections.add(Section.COMING_2);
+            }
 
 
 
