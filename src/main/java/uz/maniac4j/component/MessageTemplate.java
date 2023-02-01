@@ -1,5 +1,6 @@
 package uz.maniac4j.component;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -24,6 +25,9 @@ import java.util.Objects;
 @Component
 public class MessageTemplate {
 
+    @Value("${prixod.permission.list}")
+    String[] permissionList;
+//    private final List<Long> permissionList=List.of(1168887L,5398131093L);
     private final TelegramUserRepository telegramUserRepository;
     private final RequestService requestService;
     private final ItemService itemService;
@@ -98,8 +102,13 @@ public class MessageTemplate {
 
         Col col=new Col();
         Row row=new Row();
+        boolean permission = checkPermission(user);
         for (SectionType type : SectionType.values()) {
-            row.add(type.getRu(), type.name());
+            if (!permission){
+                if (!type.equals(SectionType.THIRD_TYPE))
+                    row.add(type.getRu(), type.name());
+            } else
+                row.add(type.getRu(), type.name());
         }
         col.add(row);
         col.add(Translations.BACK.getRu(),Translations.BACK.name());
@@ -122,10 +131,12 @@ public class MessageTemplate {
 //        Request request = requestService.getLast(user);
 //        if (isNew||request==null){
 //            requestService.reset(user);
-            return SendMessage.builder()
+        InlineKeyboardMarkup replyMarkup = sectionSelect(user);
+        if (replyMarkup==null) return sectionTypeSelect(user);
+        return SendMessage.builder()
                     .chatId(user.getId())
                     .text(user.getSection()==null?"<i>"+user.getSectionType().getRu()+"</i>\n\n"+Translations.TXT_SECTION.getRu():user.getSectionType().getRu()+"\n"+user.getSection().getRu())
-                    .replyMarkup(sectionSelect(user))
+                    .replyMarkup(replyMarkup)
                     .parseMode(ParseMode.HTML)
                     .build();
 //        }else {
@@ -181,8 +192,11 @@ public class MessageTemplate {
                 sections.add(Section.CHANGEABLE_17);
             }
             else {
-                sections.add(Section.COMING_1);
-                sections.add(Section.COMING_2);
+                if (checkPermission(user)){
+                    sections.add(Section.COMING_1);
+                    sections.add(Section.COMING_2);
+                } else return null;
+
             }
 
 
@@ -265,7 +279,11 @@ public class MessageTemplate {
 //        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
 //            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
 //        }
-        return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
+        if (checkPermission(user)){
+            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
+        } else {
+            return mainMenu(user);
+        }
     }
 
     public SendMessage confirmRequestMessage(TelegramUser user){
@@ -343,6 +361,14 @@ public class MessageTemplate {
         list.add(editReplyMarkup(user, markup, messageId));
         return list;
 
+    }
+
+
+    public boolean checkPermission(TelegramUser user){
+        for (String id : permissionList) {
+            if (Objects.equals(user.getId(), Long.parseLong(id))) return true;
+        }
+        return false;
     }
 
 }
