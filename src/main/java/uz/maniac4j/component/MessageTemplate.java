@@ -279,10 +279,15 @@ public class MessageTemplate {
 //        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
 //            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
 //        }
-        if (checkPermission(user)){
+        boolean b = checkPermission(user);
+        if (b){
             return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
         } else {
-            return mainMenu(user);
+            if (user.getSectionType().equals(SectionType.THIRD_TYPE))
+                return mainMenu(user);
+            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
+
+
         }
     }
 
