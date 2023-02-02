@@ -112,7 +112,8 @@ public class SheetService {
 
         List<List<Object>> all=new ArrayList<>();
         List<Object> temp;
-        String pattern = "MM.dd.yyyy HH:mm:ss";
+//        String pattern = "MM.dd.yyyy HH:mm:ss";
+        String pattern = "dd.MM.yyyy";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         for (Item item : items) {
 //            i++;
