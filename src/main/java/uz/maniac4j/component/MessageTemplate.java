@@ -41,16 +41,16 @@ public class MessageTemplate {
     public SendMessage mainMenu(TelegramUser user){
         Col col=new Col();
 
-        col.add(Translations.ADD_REQUEST.getRu(), Translations.ADD_REQUEST.name());
+        col.add(Translations.ADD_REQUEST.getRu(user), Translations.ADD_REQUEST.name());
         Request last = requestService.getLast(user);
-        if (last!=null) col.add(Translations.DRAFT_REQUEST.getRu(),Translations.DRAFT_REQUEST.name());
+        if (last!=null) col.add(Translations.DRAFT_REQUEST.getRu(user),Translations.DRAFT_REQUEST.name());
 
 //        col.add("Yangi zayavka yaratish!");
 
-//        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+//        col.add(Translations.BACK.getRu(user),Translations.BACK.name());
         return SendMessage.builder()
                 .chatId(user.getId())
-                .text(Translations.TXT_MAIN.getRu())
+                .text(Translations.TXT_MAIN.getRu(user))
                 .replyMarkup(col.getMarkup())
                 .parseMode(ParseMode.MARKDOWN)
                 .build();
@@ -60,20 +60,20 @@ public class MessageTemplate {
         Col col=new Col();
 
 
-        col.add(Translations.ADD_REQUEST.getRu(), Translations.ADD_REQUEST.name());
+        col.add(Translations.ADD_REQUEST.getRu(user), Translations.ADD_REQUEST.name());
         Request last = requestService.getLast(user);
-        if (last!=null) col.add(Translations.DRAFT_REQUEST.getRu(),Translations.DRAFT_REQUEST.name());
+        if (last!=null) col.add(Translations.DRAFT_REQUEST.getRu(user),Translations.DRAFT_REQUEST.name());
 
 //        col.add("Yangi zayavka yaratish!");
 
-//        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+//        col.add(Translations.BACK.getRu(user),Translations.BACK.name());
         List<PartialBotApiMethod<? extends Serializable>> list=new ArrayList<>();
-        list.add(editText(user, Translations.TXT_MAIN.getRu(), messageId));
+        list.add(editText(user, Translations.TXT_MAIN.getRu(user), messageId));
         list.add(editReplyMarkup(user, col.getMarkup(), messageId));
         return list;
 //        return SendMessage.builder()
 //                .chatId(user.getId())
-//                .text(Translations.TXT_MAIN.getRu())
+//                .text(Translations.TXT_MAIN.getRu(user))
 //                .replyMarkup(col.getMarkup())
 //                .parseMode(ParseMode.MARKDOWN)
 //                .build();
@@ -106,17 +106,17 @@ public class MessageTemplate {
         for (SectionType type : SectionType.values()) {
             if (!permission){
                 if (!type.equals(SectionType.THIRD_TYPE))
-                    row.add(type.getRu(), type.name());
+                    row.add(type.getRu(user), type.name());
             } else
-                row.add(type.getRu(), type.name());
+                row.add(type.getRu(user), type.name());
         }
         col.add(row);
-        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+        col.add(Translations.BACK.getRu(user),Translations.BACK.name());
 
 
         return SendMessage.builder()
                 .chatId(user.getId())
-                .text(Translations.TXT_SECTION.getRu())
+                .text(Translations.TXT_SECTION.getRu(user))
                 .replyMarkup(col.getMarkup())
                 .parseMode(ParseMode.HTML)
                 .build();
@@ -135,7 +135,7 @@ public class MessageTemplate {
         if (replyMarkup==null) return sectionTypeSelect(user);
         return SendMessage.builder()
                     .chatId(user.getId())
-                    .text(user.getSection()==null?"<i>"+user.getSectionType().getRu()+"</i>\n\n"+Translations.TXT_SECTION.getRu():user.getSectionType().getRu()+"\n"+user.getSection().getRu())
+                    .text(user.getSection()==null?"<i>"+user.getSectionType().getRu(user)+"</i>\n\n"+Translations.TXT_SECTION.getRu(user):user.getSectionType().getRu(user)+"\n"+user.getSection().getRu(user))
                     .replyMarkup(replyMarkup)
                     .parseMode(ParseMode.HTML)
                     .build();
@@ -216,11 +216,11 @@ public class MessageTemplate {
             Section section=user.getSection();
             Request request = requestService.getLast(user);
             List<Item> items = itemService.allByRequest(request);
-            col.add("➕ "+Translations.ADD.getRu(),section.name());
+            col.add("➕ "+Translations.ADD.getRu(user),section.name());
             itemer(col, section, items);
-            if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
+            if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(user),Translations.SEND_REQUEST.name());
 
-            col.add(Translations.BACK.getRu(),Translations.BACK.name());
+            col.add(Translations.BACK.getRu(user),Translations.BACK.name());
             return col.getMarkup();
         }
 
@@ -229,20 +229,20 @@ public class MessageTemplate {
         if (request!=null){
             List<Item> items = itemService.allByRequest(request);
             for (Section section : sections) {
-                col.add(section.getRu(),section.name());
+                col.add(section.getRu(user),section.name());
                 itemer(col, section, items);
             }
-            if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(),Translations.SEND_REQUEST.name());
+            if (items.size()>0) col.add(Translations.SEND_REQUEST.getRu(user),Translations.SEND_REQUEST.name());
 
-            col.add(Translations.BACK.getRu(),Translations.BACK.name());
+            col.add(Translations.BACK.getRu(user),Translations.BACK.name());
             return col.getMarkup();
         }else {
             requestService.reset(user);
 
             for (Section section : sections) {
-                col.add(section.getRu(),section.name());
+                col.add(section.getRu(user),section.name());
             }
-            col.add(Translations.BACK.getRu(),Translations.BACK.name());
+            col.add(Translations.BACK.getRu(user),Translations.BACK.name());
             return col.getMarkup();
         }
     }
@@ -266,7 +266,7 @@ public class MessageTemplate {
     //Mahsulot qo'shishni so'rash
     public SendMessage addItem(TelegramUser user,String text){
         Col col=new Col();
-        col.add(Translations.BACK.getRu(),Translations.BACK.name());
+        col.add(Translations.BACK.getRu(user),Translations.BACK.name());
 
         return SendMessage.builder()
                 .chatId(user.getId())
@@ -277,15 +277,15 @@ public class MessageTemplate {
     }
     public SendMessage addItem(TelegramUser user){
 //        if (user.getSection().equals(Section.EIGHTH)||user.getSection().equals(Section.NINTH)||user.getSection().equals(Section.TENTH)){
-//            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu());
+//            return addItem(user,"<i>"+user.getSectionType().getRu(user)+"</i>\n\n"+"<b>"+user.getSection().getRu(user) +"</b>\n"+Translations.TXT_PRODUCT_ANOTHER.getRu(user));
 //        }
         boolean b = checkPermission(user);
         if (b){
-            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
+            return addItem(user,"<i>"+user.getSectionType().getRu(user)+"</i>\n\n"+"<b>"+user.getSection().getRu(user) +"</b>\n"+Translations.TXT_PRODUCT.getRu(user));
         } else {
             if (user.getSectionType().equals(SectionType.THIRD_TYPE))
                 return mainMenu(user);
-            return addItem(user,"<i>"+user.getSectionType().getRu()+"</i>\n\n"+"<b>"+user.getSection().getRu() +"</b>\n"+Translations.TXT_PRODUCT.getRu());
+            return addItem(user,"<i>"+user.getSectionType().getRu(user)+"</i>\n\n"+"<b>"+user.getSection().getRu(user) +"</b>\n"+Translations.TXT_PRODUCT.getRu(user));
 
 
         }
@@ -298,7 +298,7 @@ public class MessageTemplate {
         String itemList="";
         int counter=0;
         if (items.size()>0){
-            text+="<b>\uD83D\uDCDD Расходы</b>\n";
+            text+=Translations.TXT.getRu(user);
             for (Section section : Section.values()) {
                 itemList="";
                 counter=0;
@@ -310,16 +310,16 @@ public class MessageTemplate {
                         } else itemList+="<b>"+counter+" - </b>"+(item.getAmount()!=0?item.getAmount():"$"+item.getAmountUsd())+" \uD83D\uDD8A "+item.getDescription()+"\n";
                     }
                 }
-                if (itemList.length()>1) text+="\n✳ <b>"+section.getRu()+"</b> : \n"+itemList;
+                if (itemList.length()>1) text+="\n✳ <b>"+section.getRu(user)+"</b> : \n"+itemList;
             }
-            text+=Translations.TXT_REQUEST_QUESTION.getRu();
+            text+=Translations.TXT_REQUEST_QUESTION.getRu(user);
         }
         Col col=new Col();
         Row row=new Row();
-        row.add(Translations.CONFIRM_REQUEST.getRu(),Translations.CONFIRM_REQUEST.name());
-        row.add(Translations.CANCEL_REQUEST.getRu(),Translations.CANCEL_REQUEST.name());
+        row.add(Translations.CONFIRM_REQUEST.getRu(user),Translations.CONFIRM_REQUEST.name());
+        row.add(Translations.CANCEL_REQUEST.getRu(user),Translations.CANCEL_REQUEST.name());
         col.add(row);
-        col.add(Translations.BACK_SECTION.getRu(),Translations.BACK_SECTION.name());
+        col.add(Translations.BACK_SECTION.getRu(user),Translations.BACK_SECTION.name());
         return SendMessage.builder()
                 .chatId(user.getId())
                 .text(text)
@@ -329,7 +329,7 @@ public class MessageTemplate {
     }
 
     public SendMessage confirm(TelegramUser user) {
-        return SendMessage.builder().chatId(user.getId()).text(Translations.TXT_SEND_REQUEST.getRu()).build();
+        return SendMessage.builder().chatId(user.getId()).text(Translations.TXT_SEND_REQUEST.getRu(user)).build();
     }
 
 

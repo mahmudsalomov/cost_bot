@@ -98,4 +98,8 @@ public enum Section {
     public String getRu() {
         return ru;
     }
+
+    public String getRu(TelegramUser user) {
+        return ru;
+    }
 }
